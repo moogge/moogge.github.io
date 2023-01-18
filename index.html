@@ -1,0 +1,97 @@
+<html>
+<title>Rock Paper Scissors AI</title>
+<h1>
+  Rock Paper Scissors made with Brain.js neural network learning!
+  </h1>
+  <br>
+  <h1 id="computerplay">
+    Computer Played 
+  </h1>
+  <h2 id="computer">
+    0 computer wins
+  </h2>
+  <h2 id="player">
+    0 player wins
+  </h2>
+  
+  <button onclick="run(0)">
+  Rock
+  </button>
+  <button onclick="run(1)">
+  Paper
+  </button>
+  <button onclick="run(2)">
+  Scissors
+  </button>
+  <!--<script src="//unpkg.com/brain.js"></script>-->
+  <script src="/brain.js"></script>
+  <script>
+    window.addEventListener("error", handleError, true);
+
+function handleError(evt) {
+    if (evt.message) { // Chrome sometimes provides this
+      alert("error: "+evt.message +" at linenumber: "+evt.lineno+" of file: "+evt.filename);
+    } else {
+      alert("error: "+evt.type+" from element: "+(evt.srcElement || evt.target));
+    }
+}
+    var refrence=['Rock',"Paper","Scissors"]
+  //pattern must be more than 1 in length or else...
+    var pattern=[0,0];
+    var compwins=0;
+    var playerwins=0;
+    function run(play){
+      const net = new brain.recurrent.LSTMTimeStep()
+      net.train([pattern], { iterations: 100, log: true })
+      const next = net.run(pattern);
+     final=next+1;
+      final=Math.round(final);
+      if(final==(3||4)){final=0;}
+pattern.push(play);
+      var boing=whowon(refrence[play],refrence[final]);
+      updatescreen(refrence[final],boing);
+    }    
+    function updatescreen(compplay,boing){
+      document.getElementById('computer').textContent=compwins+" Computer wins";
+            document.getElementById('player').textContent=playerwins+" Player wins";
+            document.getElementById('computerplay').textContent="Computer played "+compplay+" ... "+boing+" wins!";
+    if(boing=="Draw"){
+                  document.getElementById('computerplay').textContent="Computer played "+compplay+" ... Its a Draw!";
+    }
+    }
+    function whowon(playerChoice, computerChoice){
+  if(playerChoice === "Rock") {
+    if(computerChoice === "Scissors") {
+                playerwins+=1;
+        return "Player";
+    } else {
+                compwins+=1;
+return "Computer";
+    }
+}
+if(playerChoice === "Paper") {
+    if(computerChoice === "Rock") {
+                playerwins+=1;
+return "Player";
+    } else {
+        if(computerChoice === "Scissors") {
+                    compwins+=1;
+return "Computer";
+    }
+}
+if(playerChoice === "Scissors") {
+    if(computerChoice === "Rock") {
+                compwins+=1;
+return "Computer";
+    } else {
+        if(computerChoice === "Paper") {
+                    playerwins+=1;
+return "Player";
+        }
+    }
+}
+}
+return "Draw";
+}   
+  </script>  
+</html>
